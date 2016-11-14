@@ -9,7 +9,7 @@ android {
     buildToolsVersion '25'
 
     defaultConfig {
-        applicationId 'uk.co.ribot.androidboilerplate'
+        applicationId 'com.monday8am.androidboilerplate'
         minSdkVersion 16
         targetSdkVersion 24
         testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
