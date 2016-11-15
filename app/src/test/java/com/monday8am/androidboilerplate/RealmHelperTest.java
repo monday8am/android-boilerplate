@@ -5,6 +5,10 @@ import android.database.Cursor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -12,6 +16,8 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.log.RealmLog;
 import rx.observers.TestSubscriber;
 import com.monday8am.androidboilerplate.data.local.RealmHelper;
 import com.monday8am.androidboilerplate.data.model.Ribot;
@@ -22,14 +28,18 @@ import com.monday8am.androidboilerplate.util.RxSchedulersOverrideRule;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Unit tests integration with a SQLite Database using Robolectric
+ * Unit tests integration with a Realm instance using Robolectric
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@SuppressStaticInitializationFor("io.realm.internal.Util")
+@PrepareForTest({Realm.class, RealmLog.class})
 public class RealmHelperTest {
 
-    private final RealmHelper mRealmHelper =
-            new RealmHelper(new DbOpenHelper(RuntimeEnvironment.application));
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    Realm mockRealm;
 
     @Rule
     public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
