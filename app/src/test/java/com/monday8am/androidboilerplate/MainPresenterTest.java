@@ -11,6 +11,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Collections;
 import java.util.List;
 
+import io.realm.RealmObject;
+import io.realm.RealmResults;
 import rx.Observable;
 import com.monday8am.androidboilerplate.data.DataManager;
 import com.monday8am.androidboilerplate.data.model.Ribot;
@@ -20,6 +22,7 @@ import com.monday8am.androidboilerplate.ui.main.MainPresenter;
 import com.monday8am.androidboilerplate.util.RxSchedulersOverrideRule;
 
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,9 +50,16 @@ public class MainPresenterTest {
 
     @Test
     public void loadRibotsReturnsRibots() {
-        List<Ribot> ribots = TestDataFactory.makeListRibots(10);
+
+        List<Ribot> ribotList = TestDataFactory.makeListRibots(10);
+        RealmResults<Ribot> ribots = mockRealmResults ();
         when(mMockDataManager.getRibots())
                 .thenReturn(Observable.just(ribots));
+
+        // we can't mock a RealmResult. The real ribotList is passed
+        // in place if an iterator is needed.
+        when(ribots.iterator()).thenReturn(ribotList.iterator());
+        when(ribots.size()).thenReturn(ribotList.size());
 
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibots(ribots);
@@ -59,8 +69,9 @@ public class MainPresenterTest {
 
     @Test
     public void loadRibotsReturnsEmptyList() {
+        RealmResults<Ribot> ribots = mockRealmResults ();
         when(mMockDataManager.getRibots())
-                .thenReturn(Observable.just(Collections.<Ribot>emptyList()));
+                .thenReturn(Observable.just(ribots));
 
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibotsEmpty();
@@ -77,6 +88,11 @@ public class MainPresenterTest {
         verify(mMockMainMvpView).showError();
         verify(mMockMainMvpView, never()).showRibotsEmpty();
         verify(mMockMainMvpView, never()).showRibots(anyListOf(Ribot.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends RealmObject> RealmResults<T> mockRealmResults() {
+        return mock(RealmResults.class);
     }
 
 }

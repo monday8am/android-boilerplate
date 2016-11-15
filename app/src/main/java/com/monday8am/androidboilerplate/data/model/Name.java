@@ -5,23 +5,31 @@ import io.realm.RealmObject;
 
 public class Name extends RealmObject {
 
-    private String first;
+    private String mFirst;
 
-    private String last;
+    private String mLast;
 
     public String getFirst() {
-        return first;
+        return mFirst;
     }
 
     public void setFirst(String first) {
-        this.first = first;
+        this.mFirst = first;
     }
 
     public String getLast() {
-        return last;
+        return mLast;
     }
 
     public void setLast(String last) {
-        this.last = last;
+        this.mLast = last;
     }
+
+    public Name () {}
+
+    public Name(String first, String last) {
+        mFirst = first;
+        mLast = last;
+    }
+
 }

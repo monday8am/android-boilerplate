@@ -32,19 +32,19 @@ public class TestDataFactory {
     }
 
     public static Profile makeProfile(String uniqueSuffix) {
-
         Profile profile = new Profile();
-                .setName(makeName(uniqueSuffix))
-                .setEmail("email" + uniqueSuffix + "@ribot.co.uk")
-                .setDateOfBirth(new Date())
-                .setHexColor("#0066FF")
-                .setAvatar("http://api.ribot.io/images/" + uniqueSuffix)
-                .setBio(randomUuid())
-                .build();
+        profile.setName(makeName(uniqueSuffix));
+        profile.setEmail("email" + uniqueSuffix + "@ribot.co.uk");
+        profile.setDateOfBirth(new Date());
+        profile.setHexColor("#0066FF");
+        profile.setAvatar("http://api.ribot.io/images/" + uniqueSuffix);
+        profile.setBio(randomUuid());
+
+        return profile;
     }
 
     public static Name makeName(String uniqueSuffix) {
-        return Name.create("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix);
+        return new Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix);
     }
 
 }

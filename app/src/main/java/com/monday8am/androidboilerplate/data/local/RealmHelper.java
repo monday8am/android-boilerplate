@@ -1,19 +1,11 @@
 package com.monday8am.androidboilerplate.data.local;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
-import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
-
 import java.io.Closeable;
 import java.util.Collection;
-import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.realm.Realm;
@@ -21,18 +13,17 @@ import io.realm.RealmResults;
 import io.realm.internal.IOException;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+
 import com.monday8am.androidboilerplate.data.model.Ribot;
 
 @Singleton
 public class RealmHelper implements Closeable {
 
-    private final Realm realm;
+    private final Realm mRealm;
 
     @UiThread
-    RealmHelper() {
-        realm = Realm.getDefaultInstance();
+    public RealmHelper() {
+        mRealm = Realm.getDefaultInstance();
     }
 
     @UiThread
@@ -42,12 +33,12 @@ public class RealmHelper implements Closeable {
             public void call(final Subscriber<? super Ribot> subscriber) {
                 if (subscriber.isUnsubscribed()) return;
 
-                realm.executeTransactionAsync(new Realm.Transaction() {
+                mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
                         for (Ribot ribot : newRibots) {
-                            realm.insert(ribot);
-                            subscriber.onNext(ribot);
+                            Ribot managedRibot = realm.copyToRealm(ribot);
+                            subscriber.onNext(managedRibot);
                         }
                     }
                 }, new Realm.Transaction.OnSuccess() {
@@ -67,7 +58,7 @@ public class RealmHelper implements Closeable {
     }
 
     public Observable<RealmResults<Ribot>> getRibots() {
-        return realm.where(Ribot.class).findAll().asObservable();
+        return mRealm.where(Ribot.class).findAll().asObservable();
     }
 
     /**
@@ -76,7 +67,7 @@ public class RealmHelper implements Closeable {
     @UiThread
     @Override
     public void close() throws IOException {
-        realm.close();
+        mRealm.close();
     }
 
 }
