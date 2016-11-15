@@ -6,6 +6,8 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 import com.monday8am.androidboilerplate.injection.component.ApplicationComponent;
 import com.monday8am.androidboilerplate.injection.component.DaggerApplicationComponent;
@@ -23,6 +25,11 @@ public class BoilerplateApplication extends Application  {
             Timber.plant(new Timber.DebugTree());
             Fabric.with(this, new Crashlytics());
         }
+
+        // Configure defaults for Realm
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     public static BoilerplateApplication get(Context context) {

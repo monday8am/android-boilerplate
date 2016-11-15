@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import com.monday8am.androidboilerplate.data.DataManager;
 import com.monday8am.androidboilerplate.data.SyncService;
-import com.monday8am.androidboilerplate.data.local.DatabaseHelper;
+import com.monday8am.androidboilerplate.data.local.RealmHelper;
 import com.monday8am.androidboilerplate.data.local.PreferencesHelper;
 import com.monday8am.androidboilerplate.data.remote.RibotsService;
 import com.monday8am.androidboilerplate.injection.ApplicationContext;
@@ -25,7 +25,7 @@ public interface ApplicationComponent {
     Application application();
     RibotsService ribotsService();
     PreferencesHelper preferencesHelper();
-    DatabaseHelper databaseHelper();
+    RealmHelper databaseHelper();
     DataManager dataManager();
     RxEventBus eventBus();
 

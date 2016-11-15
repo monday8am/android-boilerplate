@@ -32,7 +32,8 @@ public class TestDataFactory {
     }
 
     public static Profile makeProfile(String uniqueSuffix) {
-        return Profile.builder()
+
+        Profile profile = new Profile();
                 .setName(makeName(uniqueSuffix))
                 .setEmail("email" + uniqueSuffix + "@ribot.co.uk")
                 .setDateOfBirth(new Date())

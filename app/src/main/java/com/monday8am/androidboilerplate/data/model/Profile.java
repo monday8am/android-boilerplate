@@ -9,31 +9,70 @@ import com.google.gson.TypeAdapter;
 
 import java.util.Date;
 
-@AutoValue
-public abstract class Profile implements Parcelable {
-    public abstract Name name();
-    public abstract String email();
-    public abstract String hexColor();
-    public abstract Date dateOfBirth();
-    @Nullable public abstract String bio();
-    @Nullable public abstract String avatar();
+import io.realm.RealmObject;
 
-    public static Builder builder() {
-        return new AutoValue_Profile.Builder();
+public class Profile extends RealmObject {
+
+    private Name name;
+
+    private String email;
+
+    private String hexColor;
+
+    private Date dateOfBirth;
+
+    @Nullable private String bio;
+
+    @Nullable private String avatar;
+
+    public Name getName() {
+        return name;
     }
 
-    public static TypeAdapter<Profile> typeAdapter(Gson gson) {
-        return new AutoValue_Profile.GsonTypeAdapter(gson);
+    public void setName(Name name) {
+        this.name = name;
     }
 
-    @AutoValue.Builder
-    public abstract static class Builder {
-        public abstract Builder setName(Name name);
-        public abstract Builder setEmail(String email);
-        public abstract Builder setHexColor(String hexColor);
-        public abstract Builder setDateOfBirth(Date dateOfBirth);
-        public abstract Builder setBio(String bio);
-        public abstract Builder setAvatar(String avatar);
-        public abstract Profile build();
+    public String getEmail() {
+        return email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getHexColor() {
+        return hexColor;
+    }
+
+    public void setHexColor(String hexColor) {
+        this.hexColor = hexColor;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    @Nullable
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(@Nullable String bio) {
+        this.bio = bio;
+    }
+
+    @Nullable
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(@Nullable String avatar) {
+        this.avatar = avatar;
+    }
+
 }

@@ -1,23 +1,27 @@
 package com.monday8am.androidboilerplate.data.model;
 
-import android.os.Parcelable;
-
-import com.google.auto.value.AutoValue;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
+import io.realm.RealmObject;
 
 
-@AutoValue
-public abstract class Name implements Parcelable {
-    public abstract String first();
-    public abstract String last();
+public class Name extends RealmObject {
 
-    public static Name create(String first, String last) {
-        return new AutoValue_Name(first, last);
+    private String first;
+
+    private String last;
+
+    public String getFirst() {
+        return first;
     }
 
-    public static TypeAdapter<Name> typeAdapter(Gson gson) {
-        return new AutoValue_Name.GsonTypeAdapter(gson);
+    public void setFirst(String first) {
+        this.first = first;
     }
 
+    public String getLast() {
+        return last;
+    }
+
+    public void setLast(String last) {
+        this.last = last;
+    }
 }

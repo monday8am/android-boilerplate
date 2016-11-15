@@ -12,7 +12,7 @@ import java.util.List;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import com.monday8am.androidboilerplate.data.DataManager;
-import com.monday8am.androidboilerplate.data.local.DatabaseHelper;
+import com.monday8am.androidboilerplate.data.local.RealmHelper;
 import com.monday8am.androidboilerplate.data.local.PreferencesHelper;
 import com.monday8am.androidboilerplate.data.model.Ribot;
 import com.monday8am.androidboilerplate.data.remote.RibotsService;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 /**
  * This test class performs local unit tests without dependencies on the Android framework
  * For testing methods in the DataManager follow this approach:
- * 1. Stub mock helper classes that your method relies on. e.g. RetrofitServices or DatabaseHelper
+ * 1. Stub mock helper classes that your method relies on. e.g. RetrofitServices or RealmHelper
  * 2. Test the Observable using TestSubscriber
  * 3. Optionally write a SEPARATE test that verifies that your method is calling the right helper
  * using Mockito.verify()
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DataManagerTest {
 
-    @Mock DatabaseHelper mMockDatabaseHelper;
+    @Mock RealmHelper mMockRealmHelper;
     @Mock PreferencesHelper mMockPreferencesHelper;
     @Mock RibotsService mMockRibotsService;
     private DataManager mDataManager;
@@ -42,7 +42,7 @@ public class DataManagerTest {
     @Before
     public void setUp() {
         mDataManager = new DataManager(mMockRibotsService, mMockPreferencesHelper,
-                mMockDatabaseHelper);
+                mMockRealmHelper);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DataManagerTest {
         mDataManager.syncRibots().subscribe();
         // Verify right calls to helper methods
         verify(mMockRibotsService).getRibots();
-        verify(mMockDatabaseHelper).setRibots(ribots);
+        verify(mMockRealmHelper).setRibots(ribots);
     }
 
     @Test
@@ -77,14 +77,14 @@ public class DataManagerTest {
         mDataManager.syncRibots().subscribe(new TestSubscriber<Ribot>());
         // Verify right calls to helper methods
         verify(mMockRibotsService).getRibots();
-        verify(mMockDatabaseHelper, never()).setRibots(anyListOf(Ribot.class));
+        verify(mMockRealmHelper, never()).setRibots(anyListOf(Ribot.class));
     }
 
     private void stubSyncRibotsHelperCalls(List<Ribot> ribots) {
         // Stub calls to the ribot service and database helper.
         when(mMockRibotsService.getRibots())
                 .thenReturn(Observable.just(ribots));
-        when(mMockDatabaseHelper.setRibots(ribots))
+        when(mMockRealmHelper.setRibots(ribots))
                 .thenReturn(Observable.from(ribots));
     }
 
